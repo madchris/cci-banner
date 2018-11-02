@@ -1,0 +1,5 @@
+name: 'Cci banner'
+type: module
+description: 'Display a banner'
+core: 8.x
+package: 'CCI'

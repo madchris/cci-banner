@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+
+function cci_banner_theme($existing, $type, $theme, $path) {
+  return [
+    'cci_banner' => [
+      'variables' => [
+        'content' => NULL
+      ],
+    ],
+  ];
+}

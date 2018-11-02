@@ -1,0 +1,5 @@
+cci_banner:
+  version: VERSION
+  css:
+    layout:
+      css/cci-banner.css: {}
