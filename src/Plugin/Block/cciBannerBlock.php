@@ -19,7 +19,7 @@ class cciBannerBlock extends BlockBase {
 
   public function build() {
 
-    $img_path = drupal_get_path('module', 'cci_banner') . '/assets/banniere-cci-long.jpg';
+    $img_path = '/' . drupal_get_path('module', 'cci_banner') . '/assets/banniere-cci-long.jpg';
 
     return array(
       '#theme' => 'cci_banner',
