@@ -8,7 +8,7 @@ function cci_banner_uninstall(){
   // search for block in panels
 
   $connection = \Drupal::database();
-  $query = $connection->query("SELECT entity_id FROM {node__panelizer} WHERE panelizer_panels_display LIKE '%cci_banner%'");
+  $query = $connection->query("SELECT entity_id, panelizer_panels_display FROM {node__panelizer} WHERE panelizer_panels_display LIKE '%cci_banner%'");
   $results = $query->fetchAll();
 
   if (is_array($results)
@@ -29,6 +29,33 @@ function cci_banner_uninstall(){
 
       $node->panelizer->setValue($panel);
       $node->save();
+    }
+  }
+
+  $connection = \Drupal::database();
+  $query = $connection->query("SELECT entity_id, layout_builder__layout_section FROM {node__layout_builder__layout} WHERE layout_builder__layout_section LIKE '%cci_banner%'");
+  $results = $query->fetchAll();
+
+  if (is_array($results)
+    && !empty($results)){
+    foreach ($results AS $result) {
+      $node = \Drupal\node\Entity\Node::load($result->entity_id);
+
+      $layouts = $node->layout_builder__layout->getValue();
+
+      foreach ($layouts AS $layout_id => $layout_value) {
+
+        $blocks = $layout_value['section']->getComponents();
+        foreach ($blocks AS $key => $block) {
+          $pluginId = $block->getPluginId();
+          if ($pluginId == 'cci_banner_block') {
+            $layouts[$layout_id]['section']->removeComponent($key);
+          }
+        }
+
+        $node->layout_builder__layout->setValue($layouts);
+        $node->save();
+      }
     }
   }
 }
