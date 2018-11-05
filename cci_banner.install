@@ -1,0 +1,34 @@
+<?php
+
+function cci_banner_install(){
+
+}
+
+function cci_banner_uninstall(){
+  // search for block in panels
+
+  $connection = \Drupal::database();
+  $query = $connection->query("SELECT entity_id FROM {node__panelizer} WHERE panelizer_panels_display LIKE '%cci_banner%'");
+  $results = $query->fetchAll();
+
+  if (is_array($results)
+  && !empty($results)){
+    foreach ($results AS $result){
+      $node = \Drupal\node\Entity\Node::load($result->entity_id);
+
+      $panel = $node->panelizer->getValue();
+
+      $blocks = $panel[0]['panels_display']['blocks'];
+      foreach ($blocks AS $key => $block){
+        if ($block['id'] == 'cci_banner_block'){
+          unset($blocks[$key]);
+        }
+      }
+
+      $panel[0]['panels_display']['blocks'] = $blocks;
+
+      $node->panelizer->setValue($panel);
+      $node->save();
+    }
+  }
+}
